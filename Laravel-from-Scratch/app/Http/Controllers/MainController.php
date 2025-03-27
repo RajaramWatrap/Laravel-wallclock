@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product; // ✅ Ensure correct namespace
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class MainController extends Controller
 {
     public function index()
     {
-        $products = Product::available()->get(); // ✅ Fetch only available products
+        DB::connection()->enableQueryLog(); // ✅ Enable query logging
+        $products = Product::all();
 
-        return view('welcome', compact('products')); // ✅ Corrected return statement
+        return view('welcome')->with([
+            'products' => $products,
+        ]);
     }
 }

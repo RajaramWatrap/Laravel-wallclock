@@ -31,11 +31,18 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                        @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('panel.products.index') }}">Products</a>
+                        </li>
+
+                        @if (optional(auth()->user())->isAdmin())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/panel/products') }}">Products</a>
+                                <a class="nav-link" href="{{ route('panel.index') }}">
+                                    Panel
+                                </a>
                             </li>
-                        @endauth
+                        @endif
+
                         @inject('cartService', 'App\Services\CartService')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('carts.index') }}">

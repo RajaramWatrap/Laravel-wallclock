@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Image;
+use App\Scopes\AvailableScope;
 
 class Product extends Model
 {
@@ -21,24 +22,23 @@ class Product extends Model
     ];
 
     /**
-     * Define the polymorphic inverse relationship with Cart.
+     * Automatically apply the AvailableScope.
      */
+    protected static function booted()
+    {
+        static::addGlobalScope(new AvailableScope);
+    }
+
     public function carts()
     {
         return $this->morphedByMany(Cart::class, 'productable')->withPivot('quantity');
     }
 
-    /**
-     * Define the polymorphic inverse relationship with Order.
-     */
     public function orders()
     {
         return $this->morphedByMany(Order::class, 'productable')->withPivot('quantity');
     }
 
-    /**
-     * Define the polymorphic one-to-many relationship with Image.
-     */
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
@@ -54,8 +54,6 @@ class Product extends Model
 
     /**
      * Calculate the total price based on quantity.
-     *
-     * @return float
      */
     public function getTotalAttribute()
     {

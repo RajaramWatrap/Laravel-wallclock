@@ -2,8 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Panel\ProductController;
+use App\Http\Controllers\Panel\PanelController;
+use App\Http\Middleware\CheckIfAdmin;
 
-// ✅ Admin Panel Routes
-Route::middleware(['auth'])->prefix('panel')->name('panel.')->group(function () {
-    Route::resource('products', ProductController::class);
-});
+Route::middleware(['auth', CheckIfAdmin::class])
+    ->prefix('panel')
+    ->name('panel.')
+    ->group(function () {
+        Route::get('/', [PanelController::class, 'index'])->name('index'); // Admin Panel Dashboard
+        Route::resource('products', ProductController::class);
+    });
