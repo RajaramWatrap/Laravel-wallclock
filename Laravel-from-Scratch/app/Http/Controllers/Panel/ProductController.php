@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
-use App\Models\PanelProduct; // ✅ Use PanelProduct instead of Product
+use App\PanelProduct; // ✅ Use PanelProduct instead of Product
 
 class ProductController extends Controller
 {

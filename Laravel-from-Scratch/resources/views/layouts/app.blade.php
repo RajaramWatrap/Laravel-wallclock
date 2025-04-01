@@ -31,24 +31,20 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('panel.products.index') }}">Products</a>
-                        </li>
-
                         @if (optional(auth()->user())->isAdmin())
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('panel.index') }}">
-                                    Panel
-                                </a>
+                                <a class="nav-link" href="{{ route('panel.index') }}">Panel</a>
                             </li>
                         @endif
 
                         @inject('cartService', 'App\Services\CartService')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('carts.index') }}">
-                                Cart ({{ $cartService->countProducts() }})
-                            </a>
-                        </li>
+                        @if (!optional(auth()->user())->isAdmin()) 
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('carts.index') }}">
+                                    Cart ({{ $cartService->countProducts() }})
+                                </a>
+                            </li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
