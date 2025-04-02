@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MainController::class, 'index'])->name('main');
 
 Route::resource('carts', CartController::class)->only(['index']);
+Route::post('/carts/start-order', [CartController::class, 'startOrder'])->name('carts.startOrder');
+
 Route::resource('orders', OrderController::class)->only(['create', 'store']);
 Route::resource('products.carts', ProductCartController::class)->only(['store', 'destroy']);
 Route::resource('orders.payments', OrderPaymentController::class)->only(['create', 'store']);
+
+// ❌ Removed Sales Reports (Moved to `panel.php`)
 
 // Authentication Routes (Laravel Breeze)
 require __DIR__.'/auth.php';
@@ -32,6 +36,5 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 // ✅ Ensure admin panel routes are loaded
-require base_path('routes/panel.php'); 
+require base_path('routes/panel.php');

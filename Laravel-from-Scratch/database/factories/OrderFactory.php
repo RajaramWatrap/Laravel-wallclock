@@ -26,6 +26,9 @@ class OrderFactory extends Factory
     {
         return [
             'status' => $this->faker->randomElement(['pending', 'paid', 'shipped']),
+            'address' => $this->faker->address, // ✅ Ensure address is always included
+
         ];
     }
 }
+

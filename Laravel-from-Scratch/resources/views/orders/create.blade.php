@@ -5,14 +5,25 @@
 
     <h4 class="text-center"><strong>Grand Total: </strong>₹{{ number_format($cart->total, 2) }}</h4>
 
-    <!-- Confirm Order Button -->
+    <!-- Order Form -->
     <div class="text-center mb-3">
         <form class="d-inline" method="POST" action="{{ route('orders.store') }}">
             @csrf
-            <button class="btn btn-success" type="submit">Confirm Order</button>
+
+            <!-- Address Field -->
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <input type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror" required value="{{ old('address') }}">
+                @error('address')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <button class="btn btn-success mt-3" type="submit">Confirm Order</button>
         </form>
     </div>
 
+    <!-- Order Summary Table -->
     <div class="table-responsive">
         <table class="table table-striped">
             <thead class="thead-light">
@@ -30,7 +41,7 @@
                         </td>
                         <td>₹{{ number_format($product->price, 2) }}</td>
                         <td>{{ $product->pivot->quantity }}</td>
-                        <td>₹{{ number_format($product->total, 2) }}</td> <!-- Using formatted total -->
+                        <td>₹{{ number_format($product->total, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>

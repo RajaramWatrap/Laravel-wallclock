@@ -13,8 +13,6 @@ class OrderController extends Controller
     public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
-
-        // Apply authentication middleware
     }
 
     /**
@@ -34,28 +32,43 @@ class OrderController extends Controller
     /**
      * Store a newly created order in the database.
      */
+
+
     public function store(Request $request)
-    {
-        $user = $request->user();
-        $cart = $this->cartService->getFromCookie();
-
-        if (!$cart || $cart->products->isEmpty()) {
-            return redirect()->route('orders.create')->withErrors('Your cart is empty.');
-        }
-
-        // Create order
-        $order = $user->orders()->create(['status' => 'pending']);
-
-        // Attach cart products to order
-        $cartProductsWithQuantity = $cart->products->mapWithKeys(fn ($product) => [
-            $product->id => ['quantity' => $product->pivot->quantity]
-        ]);
-
-        $order->products()->attach($cartProductsWithQuantity->toArray());
-
-        // Redirect to the payment page for the newly created order
-        return redirect()->route('orders.payments.create', ['order' => $order->id]);
+{
+    // Check if the user is authenticated
+    if (!auth()->check()) {
+        return redirect()->route('login')->with('error', 'If you are already registered, please login to proceed. Otherwise, please register and login.');
     }
+
+    $user = $request->user();
+    $cart = $this->cartService->getFromCookie();
+
+    if (!$cart || $cart->products->isEmpty()) {
+        return redirect()->route('orders.create')->withErrors('Your cart is empty.');
+    }
+
+    // Validate Address
+    $request->validate([
+        'address' => 'required|string|max:255',
+    ]);
+
+    // Create Order
+    $order = $user->orders()->create([
+        'status' => 'pending',
+        'address' => $request->address,
+    ]);
+
+    // Attach cart products to order
+    $cartProductsWithQuantity = $cart->products->mapWithKeys(fn ($product) => [
+        $product->id => ['quantity' => $product->pivot->quantity]
+    ]);
+
+    $order->products()->attach($cartProductsWithQuantity->toArray());
+
+    // Redirect to the payment page for the newly created order
+    return redirect()->route('orders.payments.create', ['order' => $order->id]);
+}
 
     /**
      * Display the specified order.

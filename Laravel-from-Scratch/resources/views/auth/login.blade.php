@@ -5,6 +5,13 @@
     <div class="card p-4 shadow-lg" style="width: 400px;">
         <h3 class="text-center mb-3">Login</h3>
 
+        <!-- Show Error Message (For Order Redirection) -->
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Session Status -->
         @if (session('status'))
             <div class="alert alert-success">

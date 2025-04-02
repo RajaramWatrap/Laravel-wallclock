@@ -20,6 +20,7 @@ class Order extends Model
     protected $fillable = [
         'status',
         'customer_id',
+        'address', // ✅ Added this line to allow mass assignment of address
     ];
 
     /**
